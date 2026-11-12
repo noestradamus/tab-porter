@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Porter",
+  "version": "1.5.0",
+  "minimum_chrome_version": "137",
+  "description": "Group background tabs by site, URL path, page title, GitHub repository, or YouTube video type. Review and undo recent moves.",
+  "incognito": "not_allowed",
+  "permissions": ["tabs", "tabGroups", "storage", "alarms"],
+  "background": { "service_worker": "worker.js" },
+  "options_page": "options.html",
+  "icons": { "16": "icons/tabs-16.png", "32": "icons/tabs-32.png", "48": "icons/tabs-48.png", "128": "icons/tabs-128.png" },
+  "action": {
+    "default_title": "Tab Porter · Manage groups and recent moves",
+    "default_popup": "popup.html",
+    "default_icon": { "16": "icons/tabs-16.png", "32": "icons/tabs-32.png" }
+  }
+}

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Your groups · Tab Porter</title>
+    <link rel="icon" href="icons/tabs-32.png">
+    <link rel="stylesheet" href="options.css">
+    <script defer src="rule-fields.js"></script>
+    <script defer src="advanced-editor.js"></script>
+    <script defer src="options.js"></script>
+  </head>
+  <body>
+    <main>
+      <header class="brand">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="icons/porter-lockup-inverse.svg">
+          <img src="icons/porter-lockup.svg" width="157" height="22" alt="Tab Porter">
+        </picture>
+      </header>
+      <section id="collection" aria-labelledby="groups-heading" hidden>
+        <div class="section-header">
+          <h1 id="groups-heading">Your groups</h1>
+          <button id="new" type="button" class="primary">New group</button>
+        </div>
+        <p id="priority" class="intro" hidden>If a tab matches multiple groups, the first match in this list wins.</p>
+        <ol id="groups" aria-label="Saved groups"></ol>
+      </section>
+      <section id="editor" aria-labelledby="editor-heading" hidden>
+        <h1 id="editor-heading">Create a group</h1>
+        <p class="intro">A tab joins this group when it matches any site, page title keyword, or advanced rule you add.</p>
+        <form id="group-form">
+          <fieldset id="fields">
+            <legend class="visually-hidden">Group settings</legend>
+            <div class="pair">
+              <div>
+                <label for="group-name">Group name</label>
+                <input id="group-name" type="text" placeholder="e.g. Reading" required autocomplete="off">
+              </div>
+              <div>
+                <label for="group-color">Color for new groups</label>
+                <select id="group-color">
+                  <option value="blue">Blue</option>
+                  <option value="red">Red</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="green">Green</option>
+                  <option value="purple">Purple</option>
+                  <option value="pink">Pink</option>
+                  <option value="cyan">Cyan</option>
+                  <option value="orange">Orange</option>
+                  <option value="grey">Grey</option>
+                </select>
+              </div>
+            </div>
+            <div class="field" id="basic-sites">
+              <label for="sites">Sites</label>
+              <p class="hint" id="sites-hint">One domain per line or separated by commas. Subdomains count too.</p>
+              <textarea id="sites" rows="2" placeholder="example.org" aria-describedby="sites-hint" autocapitalize="off" spellcheck="false"></textarea>
+            </div>
+            <div class="field">
+              <label for="keywords">Page title keywords</label>
+              <p class="hint" id="keywords-hint">One word or phrase per line, or separate them with commas.</p>
+              <textarea id="keywords" rows="2" placeholder="book review" aria-describedby="keywords-hint"></textarea>
+            </div>
+            <details id="advanced-rules">
+              <summary>Advanced rules <span id="advanced-count"></span></summary>
+              <div class="advanced-body">
+                <p class="hint">A match on any condition is enough.</p>
+                <div id="advanced-conditions"></div>
+                <button id="add-condition" type="button">Add condition</button>
+              </div>
+            </details>
+            <p class="hint sort-note">Matching background tabs can move into this group across your Chrome windows.</p>
+            <div class="actions">
+              <button id="save" class="primary" type="submit">Save group</button>
+              <button id="cancel" type="button">Cancel</button>
+              <button id="delete" class="delete" type="button" hidden>Delete rule</button>
+            </div>
+          </fieldset>
+        </form>
+      </section>
+      <p id="status" role="status" aria-live="polite" aria-atomic="true">Loading groups…</p>
+      <button id="retry" type="button" hidden>Try again</button>
+    </main>
+    <template id="advanced-condition">
+      <details class="condition">
+        <summary class="condition-summary"><span class="condition-name"></span><span class="condition-preview"></span></summary>
+        <div class="condition-body">
+        <div class="condition-heading">
+          <label><span>Match</span>
+            <select class="condition-type">
+              <option value="path">URL path</option>
+              <option value="title">Page title</option>
+              <option value="youtube">YouTube videos</option>
+            </select>
+          </label>
+        </div>
+        <div class="condition-inputs">
+          <label class="operator-field"><span>Path match</span>
+            <select class="condition-operator">
+              <option value="subtree">Path and its subpages</option>
+              <option value="equals">Is exactly</option>
+              <option value="startsWith">Starts with</option>
+              <option value="contains">Contains</option>
+              <option value="endsWith">Ends with</option>
+            </select>
+          </label>
+          <label><span class="value-label">Path</span>
+            <input class="condition-value" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+          </label>
+        </div>
+        <p class="hint path-hint">Use the part after the domain, without query parameters or #fragments.</p>
+        <label class="scope-field"><span>Limit to site <span class="optional">(optional)</span></span>
+          <input class="condition-site" type="text" placeholder="Any site" autocomplete="off" autocapitalize="off" spellcheck="false">
+        </label>
+        <fieldset class="condition-formats" hidden>
+          <legend>Video link types</legend>
+          <div class="format-options">
+            <label><input type="checkbox" value="watch" checked> Watch pages</label>
+            <label><input type="checkbox" value="shorts" checked> Shorts</label>
+            <label><input type="checkbox" value="live" checked> Live streams</label>
+            <label><input type="checkbox" value="standardEmbed" checked> Standard embeds</label>
+            <label><input type="checkbox" value="privateEmbed" checked> Privacy-enhanced embeds</label>
+            <label><input type="checkbox" value="shortLink" checked> Short links (youtu.be)</label>
+          </div>
+          <p class="hint">These links open individual videos. Leave youtube.com out of Sites to skip the homepage and search results.</p>
+        </fieldset>
+        <div class="collection-settings" hidden></div>
+        <button type="button" class="remove-condition">Remove condition</button>
+        </div>
+      </details>
+    </template>
+    <template id="group-row">
+      <li>
+        <span class="swatch" aria-hidden="true"></span>
+        <div class="group-details"><strong></strong><p></p></div>
+        <button type="button" class="edit">Edit</button>
+      </li>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Recently moved · Tab Porter</title>
+    <link rel="icon" href="icons/tabs-32.png">
+    <link rel="stylesheet" href="popup.css">
+    <script defer src="popup.js"></script>
+  </head>
+  <body>
+    <main aria-label="Tab Porter">
+      <header>
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="icons/porter-lockup-inverse.svg">
+          <img src="icons/porter-lockup.svg" width="143" height="20" alt="Tab Porter">
+        </picture>
+        <h1 id="heading" hidden>Recently moved</h1>
+      </header>
+      <ol id="moves" aria-label="Recently moved tabs" hidden></ol>
+      <div id="empty" tabindex="-1" hidden>
+        <p class="empty-title" id="empty-title"></p>
+        <p id="empty-detail"></p>
+      </div>
+      <template id="move-template">
+        <li class="move">
+          <button class="tab-title" type="button"></button>
+          <button class="undo" type="button">Undo</button>
+          <div class="meta">
+            <span class="group"></span>
+            <span class="where"></span>
+            <time></time>
+          </div>
+          <div class="undo-hint" hidden></div>
+        </li>
+      </template>
+      <footer>
+        <div class="actions">
+          <button id="manage" type="button">Manage groups</button>
+          <button id="scan" type="button" hidden>Sort background tabs</button>
+        </div>
+        <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
+      </footer>
+    </main>
+  </body>
+</html>
